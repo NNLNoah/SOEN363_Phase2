@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: soen345-mongo
+    restart: unless-stopped
+    env_file:
+      - .mongo.env
+    command: ["--auth", "--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: soen345-mongo-express
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    env_file:
+      - .mongo.env
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      ME_CONFIG_BASICAUTH: true
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
+    ports:
+      - "127.0.0.1:8081:8081"
+
+volumes:
+  mongo_data:
