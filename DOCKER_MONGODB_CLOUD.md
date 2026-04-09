@@ -11,11 +11,11 @@ MongoDB Cloud Deployment With Docker
 - Set strong passwords in .mongo.env.
 
 4) Start services
-- docker compose -f docker-compose.mongodb.yml up -d
-- docker compose -f docker-compose.mongodb.yml ps
+- docker compose --env-file .mongo.env -f docker-compose.mongodb.yml up -d
+- docker compose --env-file .mongo.env -f docker-compose.mongodb.yml ps
 
 5) Verify MongoDB inside VM
-- docker exec -it soen363-mongo mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin
+- docker exec -it soen363-mongo mongosh -u admin -p 'YOUR_MONGO_ROOT_PASSWORD' --authenticationDatabase admin
 
 6) Access from your laptop through SSH tunnel (recommended)
 - ssh -N -L 27017:127.0.0.1:27017 user@your-vm-ip
@@ -28,7 +28,7 @@ MongoDB Cloud Deployment With Docker
 
 8) Use this URI in your migration script
 - MONGODB_URI=mongodb://admin:YOUR_PASSWORD@localhost:27017/?authSource=admin
-- MONGODB_DATABASE=supabase_mirror
+- MONGODB_DATABASE=hospital
 
 9) Stop services
 - docker compose -f docker-compose.mongodb.yml down
